@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kuis Biologi 40 Soal</title>
+<style>
+body{font-family:Arial,sans-serif;background:#f4f4f4;margin:20px}
+.container{max-width:900px;margin:auto;background:white;padding:20px;border-radius:10px}
+.question{padding:12px;margin:12px 0;border:1px solid #ddd;border-radius:8px}
+.correct{border:2px solid green}
+.wrong{border:2px solid red}
+button{padding:12px 20px;font-size:16px}
+#result{margin-top:20px}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>Kuis Biologi 40 Soal</h1>
+<form id="quiz"></form>
+<button type="button" onclick="submitQuiz()">Selesai</button>
+<div id="result"></div>
+</div>
+
+<script>
+const questions=[
+["Fungi termasuk organisme yang...","Prokariotik","Eukariotik","Autotrof","Virus","B"],
+["Dinding sel jamur tersusun dari...","Selulosa","Kitin","Protein","Lemak","B"],
+["Kumpulan hifa disebut...","Miselium","Rizoid","Spora","Talus","A"],
+["Jamur tempe berasal dari...","Penicillium","Aspergillus","Rhizopus","Saccharomyces","C"],
+["Jamur memperoleh makanan secara...","Autotrof","Heterotrof","Fotosintesis","Kemosintesis","B"],
+["Simbiosis jamur dan akar disebut...","Liken","Mikoriza","Koloni","Komunitas","B"],
+["Liken merupakan gabungan...","Jamur+bakteri","Jamur+lumut","Jamur+alga","Jamur+akar","C"],
+["Saccharomyces cerevisiae digunakan untuk...","Tempe","Tape","Keju","Tahu","B"],
+["Penghasil penisilin adalah...","Penicillium","Rhizopus","Candida","Volvariella","A"],
+["Jamur kuping termasuk...","Basidiomycota","Ascomycota","Zygomycota","Deuteromycota","A"],
+["Sekelompok ikan dalam kolam disebut...","Individu","Populasi","Komunitas","Bioma","B"],
+["Kumpulan berbagai populasi disebut...","Individu","Ekosistem","Komunitas","Biosfer","C"],
+["Tumbuhan hijau berperan sebagai...","Konsumen","Produsen","Dekomposer","Predator","B"],
+["Pengurai disebut juga...","Konsumen","Produsen","Dekomposer","Herbivor","C"],
+["Air termasuk komponen...","Biotik","Abiotik","Produsen","Konsumen","B"],
+["Hubungan lebah dan bunga...","Predasi","Parasitisme","Mutualisme","Kompetisi","C"],
+["Benalu dan pohon mangga...","Mutualisme","Komensalisme","Predasi","Parasitisme","D"],
+["Elang memangsa tikus...","Predasi","Kompetisi","Mutualisme","Komensalisme","A"],
+["Gabungan rantai makanan...","Piramida","Jaring makanan","Biosfer","Komunitas","B"],
+["Energi terbesar terdapat pada...","Konsumen III","Konsumen II","Konsumen I","Produsen","D"],
+["Sumber energi utama ekosistem...","Angin","Air","Matahari","Tanah","C"],
+["Pemakan tumbuhan disebut...","Karnivor","Herbivor","Omnivor","Dekomposer","B"],
+["Pemakan detritus disebut...","Produsen","Detritivor","Predator","Omnivor","B"],
+["Penguapan air disebut...","Kondensasi","Evaporasi","Presipitasi","Infiltrasi","B"],
+["Pembentukan awan disebut...","Evaporasi","Kondensasi","Presipitasi","Transpirasi","B"],
+["Hujan disebut...","Infiltrasi","Presipitasi","Kondensasi","Evaporasi","B"],
+["Tumbuhan memperoleh karbon dari...","O2","N2","CO2","H2O","C"],
+["Bakteri pengikat nitrogen berperan dalam daur...","Air","Nitrogen","Karbon","Sulfur","B"],
+["Tingkatan organisasi tertinggi...","Bioma","Biosfer","Komunitas","Populasi","B"],
+["Perpindahan energi disebut...","Siklus energi","Aliran energi","Daur energi","Respirasi","B"],
+["Pembuatan tempe termasuk bioteknologi...","Modern","Konvensional","Rekombinan","Transgenik","B"],
+["Rekayasa genetika termasuk...","Modern","Tradisional","Alami","Fermentasi","A"],
+["Golden Rice merupakan...","Hewan transgenik","Tumbuhan transgenik","Kloning","Kultur jaringan","B"],
+["Organisme yang disisipi gen asing...","Mutan","Klon","Transgenik","Hibrida","C"],
+["Kultur jaringan dilakukan secara...","Kotor","Steril","Terbuka","Basah","B"],
+["Bagian tanaman untuk kultur jaringan...","Hifa","Miselium","Eksplan","Spora","C"],
+["Nata de coco dibuat oleh...","Rhizopus","Acetobacter xylinum","Penicillium","Aspergillus","B"],
+["Yoghurt dibuat dengan...","Lactobacillus bulgaricus","Rhizopus","Acetobacter","Penicillium","A"],
+["Kloning menghasilkan individu...","Berbeda","Mirip sebagian","Identik genetik","Mutasi","C"],
+["Dampak positif bioteknologi...","Produksi turun","Hama bertambah","Produksi meningkat","Lingkungan rusak","C"]
+];
+
+const form=document.getElementById('quiz');
+questions.forEach((q,i)=>{
+let h=`<div class="question" id="q${i}"><p><b>${i+1}. ${q[0]}</b></p>`;
+['A','B','C','D'].forEach((l,j)=>{
+h+=`<label><input type="radio" name="q${i}" value="${l}"> ${l}. ${q[j+1]}</label><br>`;
+});
+h+='</div>';
+form.innerHTML+=h;
+});
+
+function submitQuiz(){
+let score=0;
+let salah=[];
+
+questions.forEach((q,i)=>{
+const div=document.getElementById('q'+i);
+const selected=document.querySelector(`input[name="q${i}"]:checked`);
+const benar=q[5];
+
+if(selected && selected.value===benar){
+score++;
+div.classList.add('correct');
+} else {
+div.classList.add('wrong');
+salah.push(`Soal ${i+1}: Jawaban benar ${benar}`);
+}
+});
+
+let nilai=Math.round(score/40*100);
+
+document.getElementById('result').innerHTML=`
+<h2>Hasil</h2>
+<p><b>Skor:</b> ${score}/40</p>
+<p><b>Nilai:</b> ${nilai}</p>
+<h3>Soal yang Salah</h3>
+<ul>${salah.map(x=>`<li>${x}</li>`).join('')}</ul>
+`;
+}
+</script>
+</body>
+</html>
